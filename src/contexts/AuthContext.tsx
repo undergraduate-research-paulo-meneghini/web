@@ -15,9 +15,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const storedToken = authService.getToken();
         const storedUser = authService.getCurrentUser();
 
-        if (storedToken && storedUser) {
+        // Set token if it exists, user object is optional
+        if (storedToken) {
             setToken(storedToken);
-            setUser(storedUser);
+            if (storedUser) {
+                setUser(storedUser);
+            }
         }
 
         setIsLoading(false);

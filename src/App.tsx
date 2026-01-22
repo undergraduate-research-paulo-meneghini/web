@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
 import DashboardPage from './pages/DashboardPage';
+import MotherRegistrationPage from './pages/MotherRegistrationPage';
 
 function App() {
 
@@ -28,6 +29,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cadastro-mae"
+            element={
+              <ProtectedRoute>
+                <MotherRegistrationPage />
               </ProtectedRoute>
             }
           />
