@@ -177,7 +177,7 @@ export interface BinomioFormStep6 {
 
 export interface UserCredentials {
     email: string;
-    senha: string;
+    password: string;
     id_user_mae: number;
 }
 

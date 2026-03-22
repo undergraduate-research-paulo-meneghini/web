@@ -1,12 +1,18 @@
 import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import Button from "../atoms/Button";
 
 export default function DashboardPage() {
     const { user, logout } = useAuth();
+    const navigate = useNavigate();
 
     const handleLogout = () => {
         logout();
         window.location.href = '/login';
+    };
+
+    const handleMotherRegistration = () => {
+        navigate('/cadastro-mae');
     };
 
     return (
@@ -16,12 +22,20 @@ export default function DashboardPage() {
                     <h1 className="text-3xl font-bold text-gray-900">
                         Dashboard
                     </h1>
-                    <Button
-                        onClick={handleLogout}
-                        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-                    >
-                        Logout
-                    </Button>
+                    <div className="flex gap-3">
+                        <Button
+                            onClick={handleMotherRegistration}
+                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                        >
+                            Cadastro de Mãe
+                        </Button>
+                        <Button
+                            onClick={handleLogout}
+                            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                        >
+                            Logout
+                        </Button>
+                    </div>
                 </div>
 
                 <div className="bg-gray-50 rounded-lg p-6">

@@ -42,7 +42,7 @@ export default function CredentialsModal({ credentials, onClose }: CredentialsMo
                         <CheckCircle className="text-green-600" size={32} />
                     </div>
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                        ✅ Cadastro realizado com sucesso!
+                        Cadastro realizado com sucesso!
                     </h2>
                     <p className="text-gray-600">
                         Suas credenciais de acesso foram geradas
@@ -58,7 +58,7 @@ export default function CredentialsModal({ credentials, onClose }: CredentialsMo
                         </div>
                         <div className="ml-3">
                             <p className="text-sm text-yellow-700 font-semibold">
-                                ⚠️ Anote essas informações!
+                                Anote essas informações!
                             </p>
                             <p className="text-xs text-yellow-600 mt-1">
                                 A senha será exibida apenas uma vez e não poderá ser recuperada depois.
@@ -97,11 +97,11 @@ export default function CredentialsModal({ credentials, onClose }: CredentialsMo
                             <input
                                 type="text"
                                 readOnly
-                                value={credentials.senha}
+                                value={credentials.password}
                                 className="flex-1 px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 font-mono text-lg font-bold"
                             />
                             <button
-                                onClick={() => copyToClipboard(credentials.senha, 'password')}
+                                onClick={() => copyToClipboard(credentials.password, 'password')}
                                 className="p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                                 title="Copiar senha"
                             >

@@ -1,12 +1,18 @@
 import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import Button from "../atoms/Button";
 
 export default function HomePage() {
     const { user, logout } = useAuth();
+    const navigate = useNavigate();
 
     const handleLogout = () => {
         logout();
         window.location.href = '/login';
+    };
+
+    const handleMotherRegistration = () => {
+        navigate('/cadastro-mae');
     };
 
     return (
@@ -27,12 +33,20 @@ export default function HomePage() {
                         {user?.name || user?.email?.split('@')[0] || 'Usuário'}
                     </p>
 
-                    <Button
-                        onClick={handleLogout}
-                        className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-medium hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg"
-                    >
-                        Sair
-                    </Button>
+                    <div className="space-y-3">
+                        <Button
+                            onClick={handleMotherRegistration}
+                            className="w-full px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg font-medium hover:from-green-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg"
+                        >
+                            Cadastro de Mãe
+                        </Button>
+                        <Button
+                            onClick={handleLogout}
+                            className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-medium hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg"
+                        >
+                            Sair
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>
