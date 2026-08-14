@@ -7,6 +7,8 @@ import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
 import DashboardPage from './pages/DashboardPage';
 import MotherRegistrationPage from './pages/MotherRegistrationPage';
+import ContentManagementPage from './pages/ContentManagementPage';
+import ContentFormPage from './pages/ContentFormPage';
 
 function App() {
 
@@ -37,6 +39,30 @@ function App() {
             element={
               <ProtectedRoute>
                 <MotherRegistrationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/gerenciar-conteudo"
+            element={
+              <ProtectedRoute>
+                <ContentManagementPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/gerenciar-conteudo/novo"
+            element={
+              <ProtectedRoute>
+                <ContentFormPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/gerenciar-conteudo/:id/editar"
+            element={
+              <ProtectedRoute>
+                <ContentFormPage />
               </ProtectedRoute>
             }
           />
