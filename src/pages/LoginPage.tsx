@@ -13,8 +13,8 @@ export default function LoginPage() {
         try {
             setError('');
             await login(email, password);
-            // Redirect to home after successful login
-            navigate('/');
+            // Redirect to dashboard after successful login
+            navigate('/dashboard');
         } catch (err: any) {
             // Handle login errors
             const errorMessage = err.response?.data?.message ||

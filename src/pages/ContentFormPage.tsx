@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { X, Save } from 'lucide-react';
 import BlockEditor from '../components/BlockEditor';
-import axios from 'axios';
+import api from '../services/api';
 
 export default function ContentFormPage() {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ export default function ContentFormPage() {
   const [formData, setFormData] = useState({
     titulo: '',
     categoria: 'Amamentação',
-    status: 'Rascunho',
+    status: 'rascunho',
     semanaApresentacao: '',
     fase: '',
     nivelRisco: '',
@@ -24,14 +24,16 @@ export default function ContentFormPage() {
   });
 
   const [loading, setLoading] = useState(false);
+  const [loadingData, setLoadingData] = useState(isEditing);
 
   useEffect(() => {
     if (isEditing) {
-      axios.get(`http://localhost:3000/conteudos/${id}`)
+      api.get(`/conteudos/${id}`)
         .then(response => {
           setFormData(response.data);
         })
-        .catch(error => console.error('Error fetching data', error));
+        .catch(error => console.error('Error fetching data', error))
+        .finally(() => setLoadingData(false));
     }
   }, [id]);
 
@@ -48,9 +50,9 @@ export default function ContentFormPage() {
     setLoading(true);
     try {
       if (isEditing) {
-        await axios.patch(`http://localhost:3000/conteudos/${id}`, formData);
+        await api.patch(`/conteudos/${id}`, formData);
       } else {
-        await axios.post(`http://localhost:3000/conteudos`, formData);
+        await api.post(`/conteudos`, formData);
       }
       navigate('/gerenciar-conteudo');
     } catch (error) {
@@ -74,7 +76,7 @@ export default function ContentFormPage() {
           </div>
           <button 
             onClick={handleSave}
-            disabled={loading}
+            disabled={loading || loadingData}
             className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md font-medium transition-colors disabled:opacity-50"
           >
             <Save size={18} />
@@ -83,7 +85,12 @@ export default function ContentFormPage() {
         </div>
 
         {/* Content Area */}
-        <div className="p-8 overflow-y-auto grow">
+        {loadingData ? (
+          <div className="p-8 flex justify-center items-center h-full">
+            <p className="text-gray-500">Carregando conteúdo...</p>
+          </div>
+        ) : (
+          <div className="p-8 overflow-y-auto grow">
           
           {/* Informações */}
           <div className="mb-8">
@@ -115,8 +122,8 @@ export default function ContentFormPage() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
                   <select name="status" value={formData.status} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded-md bg-white">
-                    <option value="Rascunho">Rascunho</option>
-                    <option value="Publicado">Publicado</option>
+                    <option value="rascunho">Rascunho</option>
+                    <option value="publicado">Publicado</option>
                   </select>
                 </div>
               </div>
@@ -136,13 +143,13 @@ export default function ContentFormPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Fase</label>
                   <select name="fase" value={formData.fase} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded-md bg-white">
                     <option value="">Selecione...</option>
-                    <option value="Pré-natal">Pré-natal</option>
-                    <option value="Pós-parto imediato (0-48h)">Pós-parto imediato (0-48h)</option>
-                    <option value="1 a 30 dias">1 a 30 dias</option>
-                    <option value="1 a 3 meses">1 a 3 meses</option>
-                    <option value="3 a 6 meses">3 a 6 meses</option>
-                    <option value="6 a 12 meses">6 a 12 meses</option>
-                    <option value="Acima de 12 meses">Acima de 12 meses</option>
+                    <option value="pre_natal">Pré-natal</option>
+                    <option value="pos_parto_imediato">Pós-parto imediato (0-48h)</option>
+                    <option value="1_30_dias">1 a 30 dias</option>
+                    <option value="1_3_meses">1 a 3 meses</option>
+                    <option value="3_6_meses">3 a 6 meses</option>
+                    <option value="6_12_meses">6 a 12 meses</option>
+                    <option value="acima_12_meses">Acima de 12 meses</option>
                   </select>
                 </div>
                 <div>
@@ -206,6 +213,7 @@ export default function ContentFormPage() {
           </div>
 
         </div>
+        )}
       </div>
     </div>
   );

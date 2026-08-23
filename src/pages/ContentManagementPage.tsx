@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Eye, EyeOff, Edit, Trash2, FileText, Layers, File } from 'lucide-react';
-import axios from 'axios';
+import api from '../services/api';
 
 interface Conteudo {
   id: string;
@@ -22,7 +22,7 @@ export default function ContentManagementPage() {
 
   const fetchConteudos = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/conteudos');
+      const response = await api.get('/conteudos');
       setConteudos(response.data);
     } catch (error) {
       console.error('Error fetching conteudos', error);
@@ -32,9 +32,9 @@ export default function ContentManagementPage() {
   };
 
   const handleStatusToggle = async (conteudo: Conteudo) => {
-    const newStatus = conteudo.status === 'Publicado' ? 'Rascunho' : 'Publicado';
+    const newStatus = conteudo.status === 'publicado' ? 'rascunho' : 'publicado';
     try {
-      await axios.patch(`http://localhost:3000/conteudos/${conteudo.id}`, { status: newStatus });
+      await api.patch(`/conteudos/${conteudo.id}`, { status: newStatus });
       setConteudos(conteudos.map(c => c.id === conteudo.id ? { ...c, status: newStatus } : c));
     } catch (error) {
       console.error('Error updating status', error);
@@ -44,7 +44,7 @@ export default function ContentManagementPage() {
   const handleDelete = async (id: string, titulo: string) => {
     if (window.confirm(`Deseja excluir permanentemente "${titulo}"?`)) {
       try {
-        await axios.delete(`http://localhost:3000/conteudos/${id}`);
+        await api.delete(`/conteudos/${id}`);
         setConteudos(conteudos.filter(c => c.id !== id));
       } catch (error) {
         console.error('Error deleting conteudo', error);
@@ -53,8 +53,8 @@ export default function ContentManagementPage() {
   };
 
   const total = conteudos.length;
-  const publicados = conteudos.filter(c => c.status === 'Publicado').length;
-  const rascunhos = conteudos.filter(c => c.status === 'Rascunho').length;
+  const publicados = conteudos.filter(c => c.status === 'publicado').length;
+  const rascunhos = conteudos.filter(c => c.status === 'rascunho').length;
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
@@ -129,8 +129,8 @@ export default function ContentManagementPage() {
               <div key={conteudo.id} className="bg-white p-5 rounded-lg shadow-sm border border-gray-100 flex items-center justify-between hover:shadow-md transition-shadow">
                 <div>
                   <div className="flex items-center gap-2 mb-2">
-                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${conteudo.status === 'Publicado' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                      {conteudo.status === 'Publicado' ? 'Publicado' : 'Rascunho'}
+                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${conteudo.status === 'publicado' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                      {conteudo.status === 'publicado' ? 'Publicado' : 'Rascunho'}
                     </span>
                     <span className="px-2 py-1 rounded-full text-xs font-semibold bg-pink-100 text-pink-700">
                       {conteudo.categoria}
@@ -144,9 +144,9 @@ export default function ContentManagementPage() {
                   <button 
                     onClick={() => handleStatusToggle(conteudo)}
                     className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
-                    title={conteudo.status === 'Publicado' ? 'Despublicar' : 'Publicar'}
+                    title={conteudo.status === 'publicado' ? 'Despublicar' : 'Publicar'}
                   >
-                    {conteudo.status === 'Publicado' ? <EyeOff size={20} /> : <Eye size={20} />}
+                    {conteudo.status === 'publicado' ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
                   <button 
                     onClick={() => navigate(`/gerenciar-conteudo/${conteudo.id}/editar`)}
