@@ -20,10 +20,12 @@ export default function ContentFormPage() {
     condicaoEnvio: '',
     link: '',
     referenciaMaterial: '',
+    imagemCapa: '',
     blocos: [] as any
   });
 
   const [loading, setLoading] = useState(false);
+  const [uploadingCover, setUploadingCover] = useState(false);
   const [loadingData, setLoadingData] = useState(isEditing);
 
   useEffect(() => {
@@ -44,6 +46,30 @@ export default function ContentFormPage() {
 
   const handleBlocksChange = (content: any) => {
     setFormData(prev => ({ ...prev, blocos: content }));
+  };
+
+  const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingCover(true);
+    try {
+      const body = new FormData();
+      body.append('file', file);
+      
+      const response = await api.post('/uploads', body, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      
+      setFormData(prev => ({ ...prev, imagemCapa: response.data.url }));
+    } catch (error) {
+      console.error('Error uploading cover', error);
+      alert('Erro ao fazer upload da imagem de capa.');
+    } finally {
+      setUploadingCover(false);
+    }
   };
 
   const handleSave = async () => {
@@ -107,6 +133,24 @@ export default function ContentFormPage() {
                   className="w-full p-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500"
                 />
               </div>
+              
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Imagem de Capa</label>
+                <div className="flex items-center gap-4">
+                  {formData.imagemCapa && (
+                    <img src={formData.imagemCapa} alt="Capa" className="w-16 h-16 object-cover rounded-md shadow-sm border border-gray-200" />
+                  )}
+                  <input 
+                    type="file" 
+                    accept="image/*"
+                    onChange={handleCoverUpload}
+                    disabled={uploadingCover}
+                    className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 cursor-pointer border border-gray-300 rounded-md p-1"
+                  />
+                  {uploadingCover && <span className="text-sm text-purple-600 font-medium whitespace-nowrap">Enviando...</span>}
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
